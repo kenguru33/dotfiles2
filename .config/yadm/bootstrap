@@ -2,7 +2,7 @@
 sudo apt install zsh -y
 sudo apt install zsh-syntax-highlighting -y
 sudo apt install install zsh-autosuggestions -y
-curl -sS https://starship.rs/install.sh | sh
+curl -sS https://starship.rs/install.sh | sh -s -- --yes
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
 curl https://get.volta.sh | bash
 volta install node
