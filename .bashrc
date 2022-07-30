@@ -115,3 +115,5 @@ if ! shopt -oq posix; then
     . /etc/bash_completion
   fi
 fi
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
