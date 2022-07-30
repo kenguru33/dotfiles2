@@ -35,7 +35,9 @@ case "$(uname -s)" in
       sudo apt install zsh -y
       sudo apt install zsh-syntax-highlighting -y
       sudo apt install zsh-autosuggestions -y
+      
       curl -sS https://starship.rs/install.sh | sh -s -- --yes
+      
       sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
       
      elif [[ " ${SUPPORTED_REDHAT_ID[*]} " =~ " ${DISTRO_ID} " ]]; then
