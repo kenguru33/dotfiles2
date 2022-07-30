@@ -1,0 +1,7 @@
+[user]
+	email = bernt.anker@gmail.com
+	name = Bernt Anker
+[credential]
+	helper = store
+[pull]
+	rebase = true
