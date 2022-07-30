@@ -1,25 +1,68 @@
 #!/bin/bash
+case "$(uname -s)" in
 
-#!/usr/bin/env bash
+   Darwin)
+     echo 'Mac OS X'
+     ;;
 
-if [ "$(uname)" == "Darwin" ]; then
-    # Do something under Mac OS X platform        
-elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
-    # Do something under GNU/Linux platform
-    sudo apt install zsh -y
-    sudo apt install zsh-syntax-highlighting -y
-    sudo apt install install zsh-autosuggestions -y
-    sudo apt install kitty -y
-    sudo add-apt-repository ppa:neovim-ppa/unstable -y
-    sudo apt update
-    sudo apt install neovim -y
-elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
-    # Do something under 32 bits Windows NT platform
-elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
-    # Do something under 64 bits Windows NT platform
-fi
+   Linux)
+     DISTRO_ID=$(lsb_release -is)
 
-curl -sS https://starship.rs/install.sh | sh -s -- --yes
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
-curl https://get.volta.sh | bash
-volta install node
+     SUPPORTED_DEBIAN_ID=("Pop Ubuntu Debian")
+     SUPPORTED_REDHAT_ID=("Fedora")
+
+     if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ " ${DISTRO_ID} " ]]; then
+      echo "Debian based distro..."
+      sudo apt install ripgrep -y
+      sudo apt install build-essential -y
+      sudo apt install fd-find -y
+      sudo apt install git -y
+      sudo apt install curl -y
+      sudo apt install unzip -y
+
+      LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[0-9.]+')
+      curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+      sudo tar xf lazygit.tar.gz -C /usr/local/bin lazygit
+      rm -rf lazygit.tar.gz
+
+      sudo apt install zsh -y
+      sudo apt install zsh-syntax-highlighting -y
+      sudo apt install zsh-autosuggestions -y
+      curl -sS https://starship.rs/install.sh | sh -s -- --yes
+      sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
+      curl https://get.volta.sh | bash
+      volta install node
+      sudo apt install kitty -y
+      sudo add-apt-repository ppa:neovim-ppa/stable -y
+      sudo apt update
+      sudo apt install neovim -y
+     elif [[ " ${SUPPORTED_REDHAT_ID[*]} " =~ " ${DISTRO_ID} " ]]; then
+      echo "Redhat based distro..."
+     else
+      echo"Linux distro not supported!"
+     fi
+
+     ;;
+
+   CYGWIN*|MINGW32*|MSYS*|MINGW*)
+     echo 'MS Windows is not supported!'
+     ;;
+
+   # Add here more strings to compare
+   # See correspondence table at the bottom of this answer
+
+   *)
+     echo 'OS not supported!' 
+     ;;
+esac
+# sudo apt install zsh -y
+# sudo apt install zsh-syntax-highlighting -y
+# sudo apt install install zsh-autosuggestions -y
+# curl -sS https://starship.rs/install.sh | sh -s -- --yes
+# sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
+# curl https://get.volta.sh | bash
+# volta install node
+# sudo apt install kitty -y
+# sudo add-apt-repository ppa:neovim-ppa/stable -y
+# sudo apt update
+# sudo apt install neovim -y
