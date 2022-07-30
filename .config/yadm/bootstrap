@@ -12,7 +12,7 @@ case "$(uname -s)" in
      SUPPORTED_REDHAT_ID=("Fedora")
 
      if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ " ${DISTRO_ID} " ]]; then
-      echo "Debian based distro..."
+        echo "Debian based distro detected..."
       sudo apt install ripgrep -y
       sudo apt install build-essential -y
       sudo apt install fd-find -y
@@ -52,6 +52,7 @@ case "$(uname -s)" in
 
      # fix ubuntu snap crap
      if [[ "${DISTRO_ID}" == "Ubuntu" ]]; then
+      echo "Replacing firexfox snap with deb package..."
       sudo snap remove firefox 
       sudo add-apt-repository ppa:mozillateam/ppa -y
 echo '
@@ -61,7 +62,7 @@ Pin-Priority: 1001
 ' | sudo tee /etc/apt/preferences.d/mozilla-firefox
 
       echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
-      sudo apt install firefox
+      sudo apt install firefox -y
      fi
 
      ;;
