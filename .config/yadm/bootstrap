@@ -25,17 +25,19 @@ case "$(uname -s)" in
       sudo tar xf lazygit.tar.gz -C /usr/local/bin lazygit
       rm -rf lazygit.tar.gz
 
-      sudo apt install zsh -y
-      sudo apt install zsh-syntax-highlighting -y
-      sudo apt install zsh-autosuggestions -y
-      curl -sS https://starship.rs/install.sh | sh -s -- --yes
-      sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
       curl https://get.volta.sh | bash
       volta install node
       sudo apt install kitty -y
       sudo add-apt-repository ppa:neovim-ppa/stable -y
       sudo apt update
       sudo apt install neovim -y
+      
+      sudo apt install zsh -y
+      sudo apt install zsh-syntax-highlighting -y
+      sudo apt install zsh-autosuggestions -y
+      curl -sS https://starship.rs/install.sh | sh -s -- --yes
+      sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
+      
      elif [[ " ${SUPPORTED_REDHAT_ID[*]} " =~ " ${DISTRO_ID} " ]]; then
       echo "Redhat based distro..."
      else
