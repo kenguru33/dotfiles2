@@ -48,6 +48,20 @@ case "$(uname -s)" in
       echo"Linux distro not supported!"
      fi
 
+     # fix ubuntu snap crap
+     if [[ "${DISTRO_ID}" == "Ubuntu" ]]; then
+      sudo snap remove firefox 
+      sudo add-apt-repository ppa:mozillateam/ppa -y
+echo '
+Package: *
+Pin: release o=LP-PPA-mozillateam
+Pin-Priority: 1001
+' | sudo tee /etc/apt/preferences.d/mozilla-firefox
+
+      echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
+      sudo apt install firefox
+     fi
+
      ;;
 
    CYGWIN*|MINGW32*|MSYS*|MINGW*)
