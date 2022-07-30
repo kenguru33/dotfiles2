@@ -1,0 +1,5 @@
+sudo apt install zsh -y
+sudo apt install brew zsh-syntax-highlighting -y
+sudo apt install install zsh-autosuggestions -y
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc
+
