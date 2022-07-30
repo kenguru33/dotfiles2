@@ -26,6 +26,8 @@ case "$(uname -s)" in
       rm -rf lazygit.tar.gz
 
       curl https://get.volta.sh | bash -s -- --skip-setup
+      export VOLTA_HOME="$HOME/.volta"
+      export PATH="$VOLTA_HOME/bin:$PATH"
       volta install node 
       sudo apt install kitty -y
       sudo add-apt-repository ppa:neovim-ppa/stable -y
