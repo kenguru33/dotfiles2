@@ -104,4 +104,3 @@ source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
 eval "$(starship init zsh)"
-alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
