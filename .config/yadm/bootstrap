@@ -50,10 +50,26 @@ case "$(uname -s)" in
       curl -sS https://starship.rs/install.sh | sh -s -- --yes
       
       # Install Oh-My-ZSH
+
+     if [ -d "${HOME}/.oh-my-zsh" ]; then
+      read -p "Delete existing .oh-my-zsh folder? (y/N): " DELETE_OH_MY_ZSH 
+      if [[ $DELETE_OH_MY_ZSH == "y" ]]; then
+        rm -rf $HOME/.oh-my-zsh
+      fi
+     fi
       sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
       sudo -S chsh -s "/bin/zsh" "${USER}"
 
-      
+     if [ -d "${HOME}/.local/share/nvim" ]; then
+      read -p "Delete existing Neovim config? (y/N): " DELETE_NEOVIM_CONFIG 
+      if [[ $DELETE_NEOVIM_CONFIG == "y" ]]; then
+        rm -rf $HOME/.local/share/nvim
+        rm -rf $HOME/.config/nvim/plugin 
+        nvim --headless -c 'autocmd User PackerComplete quitall'
+      fi
+     fi
+     zsh
+
      elif [[ " ${SUPPORTED_REDHAT_ID[*]} " =~ " ${DISTRO_ID} " ]]; then
       echo "Redhat based distro..."
      else
