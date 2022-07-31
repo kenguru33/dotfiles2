@@ -11,38 +11,48 @@ case "$(uname -s)" in
      SUPPORTED_DEBIAN_ID=("Pop Ubuntu Debian")
      SUPPORTED_REDHAT_ID=("Fedora")
 
+     # Debian based distro
      if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ " ${DISTRO_ID} " ]]; then
-        echo "Debian based distro detected..."
+       # Install pre required packages
       sudo apt install ripgrep -y
       sudo apt install build-essential -y
       sudo apt install fd-find -y
       sudo apt install git -y
       sudo apt install curl -y
       sudo apt install unzip -y
-
+      
+      # Install lazygit
       LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[0-9.]+')
       curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
       sudo tar xf lazygit.tar.gz -C /usr/local/bin lazygit
       rm -rf lazygit.tar.gz
 
+      # Install Volta
       curl https://get.volta.sh | bash -s -- --skip-setup
       export VOLTA_HOME="$HOME/.volta"
       export PATH="$VOLTA_HOME/bin:$PATH"
       volta install node 
+
+      # Install Kitty terminal
       sudo apt install kitty -y
+
+      # Install Neovim
       sudo add-apt-repository ppa:neovim-ppa/stable -y
       sudo apt update
       sudo apt install neovim -y
       
+      # Install Zsh
       sudo apt install zsh -y
       sudo apt install zsh-syntax-highlighting -y
       sudo apt install zsh-autosuggestions -y
       
+      # Install Starship prompt
       curl -sS https://starship.rs/install.sh | sh -s -- --yes
       
+      # Install Oh-My-ZSH
       sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
-      echo "Type your password to change default shell."
-      chsh -s /bin/zsh
+      sudo -S chsh -s "/bin/zsh" "${USER}"
+
       
      elif [[ " ${SUPPORTED_REDHAT_ID[*]} " =~ " ${DISTRO_ID} " ]]; then
       echo "Redhat based distro..."
