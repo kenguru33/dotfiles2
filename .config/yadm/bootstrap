@@ -1,106 +1,114 @@
 #!/bin/bash
-case "$(uname -s)" in
+set -o pipefail
+set -o nounset
+bootstrap() {
 
-   Darwin)
-     echo 'Mac OS X'
-     ;;
+	case "$(uname -s)" in
 
-   Linux)
-     DISTRO_ID=$(lsb_release -is)
+	Darwin)
+		echo 'Mac OS X'
+		;;
 
-     SUPPORTED_DEBIAN_ID=("Pop Ubuntu Debian")
-     SUPPORTED_REDHAT_ID=("Fedora")
+	Linux)
+		DISTRO_ID=$(lsb_release -is)
 
-     # Debian based distro
-     if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ " ${DISTRO_ID} " ]]; then
-       # Install pre required packages
-      sudo apt install ripgrep -y
-      sudo apt install build-essential -y
-      sudo apt install fd-find -y
-      sudo apt install git -y
-      sudo apt install curl -y
-      sudo apt install unzip -y
-      
-      # Install lazygit
-      LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[0-9.]+')
-      curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-      sudo tar xf lazygit.tar.gz -C /usr/local/bin lazygit
-      rm -rf lazygit.tar.gz
+		SUPPORTED_DEBIAN_ID=("Pop Ubuntu Debian")
+		SUPPORTED_REDHAT_ID=("Fedora")
 
-      # Install Volta
-      curl https://get.volta.sh | bash -s -- --skip-setup
-      export VOLTA_HOME="$HOME/.volta"
-      export PATH="$VOLTA_HOME/bin:$PATH"
-      volta install node 
+		# Debian based distro
+		if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ ${DISTRO_ID} ]]; then
+			# Install pre required packages
+			sudo apt-get install ripgrep -y
+			sudo apt-get install build-essential -y
+			sudo apt-get install fd-find -y
+			sudo apt-get install git -y
+			sudo apt-get install curl -y
+			sudo apt-get install unzip -y
+			sudo apt-get install cargo -y
+			sudo apt-get install golang-go -y
 
-      # Install Kitty terminal
-      sudo apt install kitty -y
+			# Install lazygit
+			LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[0-9.]+')
+			curl -sLo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
+			sudo tar xf lazygit.tar.gz -C /usr/local/bin lazygit
+			rm -rf lazygit.tar.gz
 
-      # Install Neovim
-      sudo add-apt-repository ppa:neovim-ppa/stable -y
-      sudo apt update
-      sudo apt install neovim -y
-      
-      # Install Zsh
-      sudo apt install zsh -y
-      sudo apt install zsh-syntax-highlighting -y
-      sudo apt install zsh-autosuggestions -y
-      
-      # Install Starship prompt
-      curl -sS https://starship.rs/install.sh | sh -s -- --yes
-      
-      # Install Oh-My-ZSH
+			# Install Volta
+			curl -s https://get.volta.sh | bash -s -- --skip-setup
+			export VOLTA_HOME="$HOME/.volta"
+			export PATH="$VOLTA_HOME/bin:$PATH"
+			volta install node
 
-     if [ -d "${HOME}/.oh-my-zsh" ]; then
-      read -p "Delete existing .oh-my-zsh folder? (y/N): " DELETE_OH_MY_ZSH 
-      if [[ $DELETE_OH_MY_ZSH == "y" ]]; then
-        rm -rf $HOME/.oh-my-zsh
-      fi
-     fi
-      sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
-      sudo -S chsh -s "/bin/zsh" "${USER}"
+			# Install Kitty terminal
+			sudo apt-get install kitty -y
 
-     if [ -d "${HOME}/.local/share/nvim" ]; then
-      read -p "Delete existing Neovim config? (y/N): " DELETE_NEOVIM_CONFIG 
-      if [[ $DELETE_NEOVIM_CONFIG == "y" ]]; then
-        rm -rf $HOME/.local/share/nvim
-        rm -rf $HOME/.config/nvim/plugin 
-        nvim --headless -c 'autocmd User PackerComplete quitall'
-      fi
-     fi
-     zsh
+			# Install Neovim
+			sudo add-apt-repository ppa:neovim-ppa/stable -y
+			sudo apt-get update
+			sudo apt-get install neovim -y
 
-     elif [[ " ${SUPPORTED_REDHAT_ID[*]} " =~ " ${DISTRO_ID} " ]]; then
-      echo "Redhat based distro..."
-     else
-      echo"Linux distro not supported!"
-     fi
+			# Install Zsh
+			sudo apt-get install zsh -y
+			sudo apt-get install zsh-syntax-highlighting -y
+			sudo apt-get install zsh-autosuggestions -y
 
-     # fix ubuntu snap crap
-     if [[ "${DISTRO_ID}" == "Ubuntu" ]]; then
-      echo "Replacing firexfox snap with deb package..."
-      sudo snap remove firefox 
-      sudo add-apt-repository ppa:mozillateam/ppa -y
-echo '
+			# Install Starship prompt
+			curl -sS https://starship.rs/install.sh | sh -s -- --yes
+
+			# Install Oh-My-ZSH
+			sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
+			sudo -S chsh -s "/bin/zsh" "${USER}"
+
+		elif
+			[[ " ${SUPPORTED_REDHAT_ID[*]} " =~ ${DISTRO_ID} ]]
+		then
+			echo "Redhat based distro..."
+		else
+			echo"Linux distro not supported!"
+		fi
+
+		# fix ubuntu snap crap
+		if [[ "${DISTRO_ID}" == "Ubuntu" ]]; then
+			echo "Replacing firexfox snap with deb package..."
+			sudo snap remove firefox
+			sudo add-apt-repository ppa:mozillateam/ppa -y
+			echo '
 Package: *
 Pin: release o=LP-PPA-mozillateam
 Pin-Priority: 1001
 ' | sudo tee /etc/apt/preferences.d/mozilla-firefox
 
-      echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
-      sudo apt install firefox -y
-     fi
+			echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
+			sudo apt-get install firefox -y
+		fi
 
-     ;;
+		;;
 
-   CYGWIN*|MINGW32*|MSYS*|MINGW*)
-     echo 'MS Windows is not supported!'
-     ;;
+	CYGWIN* | MINGW32* | MSYS* | MINGW*)
+		echo 'MS Windows is not supported!'
+		;;
 
-   # Add here more strings to compare
-   # See correspondence table at the bottom of this answer
+	# Add here more strings to compare
+	# See correspondence table at the bottom of this answer
 
-   *)
-     echo 'OS not supported!' 
-     ;;
-esac
+	*)
+		echo 'OS not supported!'
+		;;
+	esac
+}
+
+if [ -d "${HOME}/.oh-my-zsh" ]; then
+	read -rp "Delete existing .oh-my-zsh folder? (y/N): " DELETE_OH_MY_ZSH
+	if [[ $DELETE_OH_MY_ZSH == "y" ]]; then
+		rm -rf "$HOME/.oh-my-zsh"
+	fi
+fi
+if [ -d "${HOME}/.local/share/nvim" ]; then
+	read -rp "Delete existing Neovim config? (y/N): " DELETE_NEOVIM_CONFIG
+	if [[ $DELETE_NEOVIM_CONFIG == "y" ]]; then
+		rm -rf "$HOME/.local/share/nvim"
+		rm -rf "$HOME/.config/nvim/plugin"
+		nvim --headless -c 'autocmd User PackerComplete quitall'
+	fi
+fi
+bootstrap >/dev/null

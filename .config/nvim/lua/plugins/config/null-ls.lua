@@ -8,6 +8,7 @@ null_ls.setup({
 		formatting.prettier,
 		diagnostics.eslint,
 		codeAction.eslint,
+		formatting.shfmt,
 	},
 	on_attach = function(client)
 		if client.resolved_capabilities.document_formatting then
