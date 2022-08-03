@@ -1,13 +1,3 @@
--- require("nvim-lsp-installer").setup({
--- 	automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
--- 	ui = {
--- 		icons = {
--- 			server_installed = "✓",
--- 			server_pending = "➜",
--- 			server_uninstalled = "✗",
--- 		},
--- 	},
--- })
 require("mason").setup({
 	ui = {
 		icons = {
@@ -17,9 +7,15 @@ require("mason").setup({
 		},
 	},
 })
+
 require("mason-lspconfig").setup({
-	ensure_installed = {},
 	automatic_installation = true,
+})
+require("mason-tool-installer").setup({
+	ensure_installed = { "bash-language-server", "shellcheck", "shfmt", "lua-language-server", "stylua", "prettier" },
+	auto_update = false,
+	run_on_start = true,
+	start_delay = 3000,
 })
 local lspconfig = require("lspconfig")
 

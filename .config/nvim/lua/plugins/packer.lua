@@ -40,7 +40,11 @@ return packer.startup(function(use)
 
 	use({
 		"williamboman/mason.nvim",
-		requires = { "williamboman/mason-lspconfig.nvim", "neovim/nvim-lspconfig" },
+		requires = {
+			"WhoIsSethDaniel/mason-tool-installer.nvim",
+			"williamboman/mason-lspconfig.nvim",
+			"neovim/nvim-lspconfig",
+		},
 		config = get_config("lspconfig"),
 	})
 
