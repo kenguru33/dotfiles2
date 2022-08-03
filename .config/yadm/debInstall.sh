@@ -3,13 +3,13 @@ set -e
 
 trap 'catch' ERR
 catch() {
-  echo "Bootstrapping failed!"
-  kill $!
+	echo "Bootstrapping failed!"
+	kill $!
 }
 
 trap cleanUp SIGHUP SIGINT SIGTERM
 cleanUp() {
-  echo "cleaning up"
+	echo "cleaning up"
 }
 
 DEB_PACKAGES=(
@@ -69,8 +69,8 @@ spinner stop $?
 
 spinner start "Installing Oh-My-Zsh..."
 if [ ! -d "${HOME}/.oh-my-zsh" ]; then
-  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended &>/dev/null
-  sudo -S chsh -s "/bin/zsh" "${USER}"
+	sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended &>/dev/null
+	sudo -S chsh -s "/bin/zsh" "${USER}"
 fi
 spinner stop $?
 
@@ -81,6 +81,6 @@ fc-cache -fv &>/dev/null
 rm Hack.zip
 spinner stop $?
 
-spinner start "Initalizing Neovim..."
-nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
-spinner stop $?
+# spinner start "Initalizing Neovim..."
+# nvim --headless -c 'autocmd User PackerComplete quitall' -c 'PackerSync'
+# spinner stop $?
