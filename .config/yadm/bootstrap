@@ -1,73 +1,164 @@
 #!/bin/bash
-set -o pipefail
-set -o nounset
-bootstrap() {
+set -e
 
-	case "$(uname -s)" in
-
-	Darwin)
-		echo 'Mac OS X'
-		;;
-
-	Linux)
-		DISTRO_ID=$(lsb_release -is)
-
-		SUPPORTED_DEBIAN_ID=("Pop Ubuntu Debian")
-		SUPPORTED_REDHAT_ID=("Fedora")
-
-		# Debian based distro
-		if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ ${DISTRO_ID} ]]; then
-			dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-			source "${dir}/debInstall.sh"
-		elif
-			[[ " ${SUPPORTED_REDHAT_ID[*]} " =~ ${DISTRO_ID} ]]
-		then
-			echo "Redhat based distro..."
-		else
-			echo"Linux distro not supported!"
-		fi
-
-		# fix ubuntu snap crap
-		if [[ "${DISTRO_ID}" == "Ubuntu" ]]; then
-			echo "Replacing firexfox snap with deb package..."
-			sudo snap remove firefox
-			sudo add-apt-repository ppa:mozillateam/ppa -y
-			echo '
-Package: *
-Pin: release o=LP-PPA-mozillateam
-Pin-Priority: 1001
-' | sudo tee /etc/apt/preferences.d/mozilla-firefox
-
-			echo 'Unattended-Upgrade::Allowed-Origins:: "LP-PPA-mozillateam:${distro_codename}";' | sudo tee /etc/apt/apt.conf.d/51unattended-upgrades-firefox
-			sudo apt-get install firefox -y
-		fi
-
-		;;
-
-	CYGWIN* | MINGW32* | MSYS* | MINGW*)
-		echo 'MS Windows is not supported!'
-		;;
-
-	# Add here more strings to compare
-	# See correspondence table at the bottom of this answer
-
-	*)
-		echo 'OS not supported!'
-		;;
-	esac
+trap 'catch' ERR
+catch() {
+	echo "Bootstrapping failed!"
+	kill $!
 }
 
-if [ -d "${HOME}/.oh-my-zsh" ]; then
-	read -rp "Delete existing .oh-my-zsh folder? (y/N): " DELETE_OH_MY_ZSH
-	if [[ $DELETE_OH_MY_ZSH == "y" ]]; then
-		rm -rf "$HOME/.oh-my-zsh"
-	fi
+trap cleanUp SIGHUP SIGINT SIGTERM
+cleanUp() {
+	echo "cleaning up"
+}
+
+OS="$(uname -s)"
+ARCH="$(uname -m)"
+if [ "${OS}" == "Linux" ]; then
+	DISTRO_ID=$(lsb_release -is)
 fi
-if [ -d "${HOME}/.local/share/nvim" ]; then
-	read -rp "Delete existing Neovim config? (y/N): " DELETE_NEOVIM_CONFIG
-	if [[ $DELETE_NEOVIM_CONFIG == "y" ]]; then
-		rm -rf "$HOME/.local/share/nvim"
-		rm -rf "$HOME/.config/nvim/plugin"
+
+SUPPORTED_DEBIAN_ID=("Pop Ubuntu Debian")
+SUPPORTED_REDHAT_ID=("Fedora")
+
+HOMEBREW_PACKAGES=(
+	zsh
+	ripgrep
+	ffind
+	kitty
+	tmux
+	neovim
+	lazygit
+	volta
+	rust
+	go
+	pure
+	zsh-syntax-highlighting
+	zsh-autosuggestions
+	font-hack-nerd-font
+)
+
+DEB_PACKAGES=(
+	zsh
+	build-essential
+	curl
+	unzip
+	ripgrep
+	git
+	fd-find
+	cargo
+	golang-go
+	kitty
+	tmux
+	zsh-syntax-highlighting
+	zsh-autosuggestions
+	neovim
+)
+
+RPM_PACKAGES=(
+	zsh
+	build-essential
+	curl
+	unzip
+	ripgrep
+	git
+	fd-find
+	cargo
+	golang-go
+	kitty
+	tmux
+	zsh-syntax-highlighting
+	zsh-autosuggestions
+	neovim
+)
+
+linuxInstall() {
+	sudo echo
+	if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ ${DISTRO_ID} ]]; then
+		echo -n "Preparing package installation..."
+		sudo add-apt-repository ppa:neovim-ppa/stable -y &>/dev/null
+		sudo apt-get update &>/dev/null
+		echo " Done."
+
+		for package in "${DEB_PACKAGES[@]}"; do
+			echo -n "Installing ${package}... "
+			sudo apt-get install "$package" &>/dev/null
+			echo " Done."
+		done
+
+		echo -n "Installing Volta NodeJS manager..."
+		curl -s https://get.volta.sh | bash -s -- --skip-setup &>/dev/null
+		export VOLTA_HOME="$HOME/.volta"
+		export PATH="$VOLTA_HOME/bin:$PATH"
+		volta install node &>/dev/null
+		echo " Done."
+
+		echo -n "Installing LazyGit ${LAZYGIT_VERSION}..."
+		LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[0-9.]+')
+		curl -Lo lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz" &>/dev/null
+		sudo tar xf lazygit.tar.gz -C /usr/local/bin lazygit &>/dev/null
+		rm -rf lazygit.tar.gz
+		echo " Done."
+
+		echo -n "Installing Oh-My-Zsh..."
+		if [ ! -d "${HOME}/.oh-my-zsh" ]; then
+			sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended &>/dev/null
+			sudo -S chsh -s "/bin/zsh" "${USER}"
+			echo " Done."
+		else
+			echo "Old installataion found. Skipping."
+		fi
+
+		echo -n "Installing Hack Nerd font..."
+		wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip &>/dev/null
+		unzip -o Hack.zip -d "$HOME/.local/share/fonts" &>/dev/null
+		fc-cache -fv &>/dev/null
+		rm Hack.zip
+		echo " Done."
+
+		echo -n "Installing Pure Prompt..."
+		if [ ! -d "$HOME/.zsh" ]; then
+			mkdir -p "$HOME/.zsh"
+			git clone https://github.com/sindresorhus/pure.git "$HOME/.zsh/pure" &>/dev/null
+			echo " Done."
+		else
+			echo "Old installation found. skipping."
+		fi
+
+	elif
+		[[ " ${SUPPORTED_REDHAT_ID[*]} " =~ ${DISTRO_ID} ]]
+	then
+		echo "Redhat based distro..."
+	else
+		echo"Linux distro $DISTRO_ID not supported!"
 	fi
+}
+
+macOsInstall() {
+	sudo echo
+	for package in "${HOMEBREW_PACKAGES[@]}"; do
+		echo -n "Installing ${package}... "
+		brew install "$package" &>/dev/null
+		echo " Done."
+	done
+
+	echo -n "Installing Oh-My-Zsh..."
+	if [ ! -d "${HOME}/.oh-my-zsh" ]; then
+		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended &>/dev/null
+		sudo -S chsh -s "/bin/zsh" "${USER}"
+		echo " Done."
+	else
+		echo "Old installataion found. Skipping."
+	fi
+}
+
+if [ "$OS" == "Darwin" ]; then
+	macOsInstall
+elif [ "$OS" == "Linux" ]; then
+	linuxInstall
+else
+	echo "No OS supported"
+	exit 1
 fi
-bootstrap
+echo "Done."
+exit 0

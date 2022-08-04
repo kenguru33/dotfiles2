@@ -8,7 +8,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+ZSH_THEME=""
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -99,8 +99,18 @@ fi
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-export VOLTA_HOME="$HOME/.volta"
-export PATH="$VOLTA_HOME/bin:$PATH"
-eval "$(starship init zsh)"
+
+# Do this on MacOS
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  fpath+=("$(brew --prefix)/share/zsh/site-functions")
+else 
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  export VOLTA_HOME="$HOME/.volta"
+  export PATH="$VOLTA_HOME/bin:$PATH"
+  fpath+=($HOME/.zsh/pure)
+fi
+autoload -U promptinit; promptinit
+prompt pure
