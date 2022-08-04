@@ -28,13 +28,14 @@ HOMEBREW_PACKAGES=(
 	kitty
 	tmux
 	neovim
-	lazugit
+	lazygit
 	volta
 	rust
-	golang-go
+	go
 	pure
 	zsh-syntax-highlighting
 	zsh-autosuggestions
+	font-hack-nerd-font
 )
 
 DEB_PACKAGES=(
@@ -134,7 +135,21 @@ linuxInstall() {
 }
 
 macOsInstall() {
-	echo "MacOS install"
+	sudo echo
+	for package in "${HOMEBREW_PACKAGES[@]}"; do
+		echo -n "Installing ${package}... "
+		brew install "$package" &>/dev/null
+		echo " Done."
+	done
+
+	echo -n "Installing Oh-My-Zsh..."
+	if [ ! -d "${HOME}/.oh-my-zsh" ]; then
+		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended &>/dev/null
+		sudo -S chsh -s "/bin/zsh" "${USER}"
+		echo " Done."
+	else
+		echo "Old installataion found. Skipping."
+	fi
 }
 
 if [ "$OS" == "Darwin" ]; then
