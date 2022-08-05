@@ -100,7 +100,7 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-# Do this on MacOS
+# Do this on Mac OS only
 if [[ "$(uname -s)" == "Darwin" ]]; then
   source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
   source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -112,5 +112,10 @@ else
   export PATH="$VOLTA_HOME/bin:$PATH"
   fpath+=($HOME/.zsh/pure)
 fi
+
+# Language and locales
+export LC_ALL=no_NO.UTF-8
+
+# Pure Promt
 autoload -U promptinit; promptinit
 prompt pure
