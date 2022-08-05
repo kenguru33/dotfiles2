@@ -14,6 +14,12 @@ packer.init({
 
 return packer.startup(function(use)
 	-- Plugins start
+
+	local buildOpts = ""
+	if jit.arch == "arm64" then
+		buildOpts = " arch -arm64"
+	end
+
 	use({
 		"wbthomason/packer.nvim",
 		requires = {},
@@ -148,7 +154,7 @@ return packer.startup(function(use)
 
 	use({
 		"nvim-telescope/telescope-fzf-native.nvim",
-		run = "make",
+		run = buildOpts .. " make",
 	})
 	use({ "mfussenegger/nvim-dap", config = get_config("dap") })
 
