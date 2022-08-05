@@ -105,16 +105,17 @@ if [[ "$(uname -s)" == "Darwin" ]]; then
   source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
   source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
   fpath+=("$(brew --prefix)/share/zsh/site-functions")
+  # Language and locales
+  export LC_ALL=no_NO.UTF-8
 else 
   source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
   source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
   export VOLTA_HOME="$HOME/.volta"
   export PATH="$VOLTA_HOME/bin:$PATH"
   fpath+=($HOME/.zsh/pure)
+  # Language and locales
+  export LC_ALL=nb_NO.UTF-8
 fi
-
-# Language and locales
-export LC_ALL=no_NO.UTF-8
 
 # Pure Promt
 autoload -U promptinit; promptinit

@@ -39,6 +39,7 @@ HOMEBREW_PACKAGES=(
 )
 
 DEB_PACKAGES=(
+	language-pack-nb
 	zsh
 	build-essential
 	curl
