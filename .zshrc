@@ -70,7 +70,7 @@ ZSH_THEME=""
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git docker docker-compose kubectl)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -120,4 +120,9 @@ fi
 # Pure Promt
 autoload -U promptinit; promptinit
 prompt pure
+<<<<<<< HEAD
  
+=======
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+>>>>>>> ad97e29 (brew all the way)
