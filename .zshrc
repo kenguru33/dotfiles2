@@ -120,3 +120,4 @@ fi
 # Pure Promt
 autoload -U promptinit; promptinit
 prompt pure
+ 
