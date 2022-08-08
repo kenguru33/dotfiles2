@@ -1,7 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Kitty Terminal
-Exec=/usr/bin/kitty -e tmux
+Exec=/usr/bin/kitty
 Icon=/home/bernt/.local/share/applications/kitty.png
 Type=Application
 Categories=Development;
