@@ -23,7 +23,7 @@ SUPPORTED_REDHAT_ID=("Fedora")
 linuxInstall() {
 	sudo echo
 	if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ ${DISTRO_ID} ]]; then
-		brew bundle
+		brew bundle --file $(dirname "$0")/Brewfile
 		sudo usermod -s $HOMEBREW_PREFIX/bin/zsh $USER
 		sudo apt-get install kitty -y
 		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
@@ -42,7 +42,7 @@ linuxInstall() {
 
 macOsInstall() {
 	sudo echo
-	brew bundle
+	brew bundle --file $(dirname "$0")/Brewfile
 	sudo usermod -s $HOMEBREW_PREFIX/bin/zsh $USER
 	brew install kitty
 	brew install font-hack-nerd-font
