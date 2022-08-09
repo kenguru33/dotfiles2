@@ -22,6 +22,11 @@ SUPPORTED_REDHAT_ID=("Fedora")
 
 linuxInstall() {
 	sudo echo
+	
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+	sudo apt-get install build-essential -y
+	
 	if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ ${DISTRO_ID} ]]; then
 		brew bundle --file $(dirname "$0")/Brewfile
 		sudo usermod -s $HOMEBREW_PREFIX/bin/zsh $USER
