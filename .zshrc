@@ -100,8 +100,6 @@ fi
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-
-# Do this on Mac OS only
 if [[ "$(uname -s)" == "Darwin" ]]; then
   fpath+=("$(brew --prefix)/share/zsh/site-functions")
   export LC_ALL=no_NO.UTF-8
@@ -117,3 +115,4 @@ source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 autoload -U promptinit; promptinit
 prompt pure
 
+neofetch

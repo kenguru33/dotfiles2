@@ -21,38 +21,43 @@ SUPPORTED_DEBIAN_ID=("Pop Ubuntu Debian")
 SUPPORTED_REDHAT_ID=("Fedora")
 
 linuxInstall() {
-	sudo echo
-	sudo apt-get install curl -y
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-	sudo apt-get install build-essential -y
 
 	if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ ${DISTRO_ID} ]]; then
-		brew bundle --file "$(dirname "$0")/Brewfile"
-		sudo usermod -s "$HOMEBREW_PREFIX/bin/zsh" "$USER"
+		sudo apt-get install build-essential -y
 		sudo apt-get install kitty -y
-		sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
-		wget -O /tmp/Hack.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
-		unzip -o /tmp/Hack.zip -d "$HOME/.local/share/fonts"
-		fc-cache -fv
 	elif
 		[[ " ${SUPPORTED_REDHAT_ID[*]} " =~ ${DISTRO_ID} ]]
 	then
-		echo "Redhat based distro..."
+		sudo dnf installl groupinstall 'Development Tools'
+		sudo dnf install kitty
 	else
 		echo"Linux distro $DISTRO_ID not supported!"
+		exit 1
 	fi
+
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+	brew bundle --file "$(dirname "$0")/Brewfile"
+
+	wget -O /tmp/Hack.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
+	unzip -o /tmp/Hack.zip -d "$HOME/.local/share/fonts"
+	fc-cache -fv
+
+	sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
+	sudo usermod -s "$HOMEBREW_PREFIX/bin/zsh" "$USER"
+
 }
 
 macOsInstall() {
-	sudo echo
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	brew bundle --file "$(dirname "$0")/Brewfile"
-	sudo usermod -s "$HOMEBREW_PREFIX/bin/zsh" "$USER"
 	brew install kitty
 	brew install font-hack-nerd-font
 	sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
+	sudo usermod -s "$HOMEBREW_PREFIX/bin/zsh" "$USER"
+
 }
 
 if [ "$OS" == "Darwin" ]; then
@@ -63,5 +68,6 @@ else
 	echo "No OS supported"
 	exit 1
 fi
+
 echo "Done."
 exit 0
