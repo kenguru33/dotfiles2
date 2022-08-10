@@ -23,7 +23,7 @@ SUPPORTED_REDHAT_ID=("Fedora")
 linuxInstall() {
 
 	if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ ${DISTRO_ID} ]]; then
-		sudo apt-get install build-essential -y
+		sudo apt-get install build-essential procps curl file git -y
 		sudo apt-get install kitty -y
 	elif
 		[[ " ${SUPPORTED_REDHAT_ID[*]} " =~ ${DISTRO_ID} ]]
