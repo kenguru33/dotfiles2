@@ -62,6 +62,8 @@ else
 	exit 1
 fi
 
+volta install node@lts
+
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
 
 zsh_path=$(which zsh)
