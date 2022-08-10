@@ -43,9 +43,6 @@ linuxInstall() {
 	wget -O /tmp/Hack.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
 	unzip -o /tmp/Hack.zip -d "$HOME/.local/share/fonts"
 	fc-cache -fv
-
-	sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
-
 }
 
 macOsInstall() {
@@ -54,8 +51,6 @@ macOsInstall() {
 	brew bundle --file "$(dirname "$0")/Brewfile"
 	brew install kitty
 	brew install font-hack-nerd-font
-	sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
-
 }
 
 if [ "$OS" == "Darwin" ]; then
@@ -66,6 +61,10 @@ else
 	echo "No OS supported"
 	exit 1
 fi
+
+sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
+zsh_path=$(which zsh)
+sudo -S chsh -s "$zsh_path" "${USER}"
 
 echo "Done."
 exit 0
