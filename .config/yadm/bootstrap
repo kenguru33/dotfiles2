@@ -45,7 +45,6 @@ linuxInstall() {
 	fc-cache -fv
 
 	sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
-	sudo usermod -s /bin/zsh "$USER"
 
 }
 
@@ -56,7 +55,6 @@ macOsInstall() {
 	brew install kitty
 	brew install font-hack-nerd-font
 	sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
-	sudo usermod -s /bin/zsh "$USER"
 
 }
 
