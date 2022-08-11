@@ -24,7 +24,8 @@ nix-env -i \
 	oh-my-zsh \
 	neovim \
 	zsh-syntax-highlighting \
-	zsh-autosuggestions
+	zsh-autosuggestions \
+	pure-prompt
 
 # zsh default shell
 zsh_path=$(which zsh)
