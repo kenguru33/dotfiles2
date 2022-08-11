@@ -1,17 +1,12 @@
 #!/bin/bash
-set -e
 
-trap 'catch' ERR
-catch() {
-	echo "Bootstrapping failed!"
-	kill $!
-}
+# Install nix package manager
+curl -L https://nixos.org/nix/install | sh
 
-trap cleanUp SIGHUP SIGINT SIGTERM
-cleanUp() {
-	echo "cleaning up"
-}
+# source nix path
+. /home/bernt/.nix-profile/etc/profile.d/nix.sh
 
+<<<<<<< HEAD
 OS="$(uname -s)"
 if [ "${OS}" == "Linux" ]; then
 	DISTRO_ID=$(lsb_release -is)
@@ -65,13 +60,31 @@ fi
 volta install node@lts
 
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
+=======
+# Install packages
+nix-env -i \
+	zsh \
+	kitty \
+	git \
+	curl \
+	unzip \
+	azure-cli \
+	k9s \
+	kubectl \
+	kubectx \
+	lazygit \
+	ripgrep \
+	wget \
+	tmux \
+	oh-my-zsh \
+	neovim \
+	zsh-syntax-highlighting \
+	zsh-autosuggestions
+>>>>>>> 6425e7b (Migrating to Nix)
 
+# zsh default shell
 zsh_path=$(which zsh)
 if ! grep -q "^${zsh_path}$" "/etc/shells"; then
-  echo "$zsh_path" | sudo tee -a /etc/shells
+	echo "$zsh_path" | sudo tee -a /etc/shells
 fi
-
-sudo -S chsh -s "$zsh_path" "${USER}"
-
-echo "Done."
-exit 0
+chsh -s "${zsh_path}" "${USER}"
