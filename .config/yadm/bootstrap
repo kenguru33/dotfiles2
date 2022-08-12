@@ -91,17 +91,23 @@ elif [ "$OS" == "Linux" ]; then
 	brew_path="/home/linuxbrew/.linuxbrew/bin/brew"
 	linuxInstall
 else
-	echo "No OS supported"
+	echo "This OS is not supported"
 	exit 1
 fi
 
 volta install node@lts
 
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
+if [[ ! -d $HOME/.oh-my-zsh ]]; then
+	sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --keep-zshrc --unattended
+fi
 
 zsh_path=$(which zsh)
 if ! grep -q "^${zsh_path}$" "/etc/shells"; then
 	echo "$zsh_path" | sudo tee -a /etc/shells
+fi
+
+if [[ ! -d $HOME/.local/share/omf ]]; then
+	curl https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install | fish
 fi
 
 fish_path=$(which fish)
