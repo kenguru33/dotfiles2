@@ -51,9 +51,37 @@ macOsInstall() {
 
 brewBundleInstall() {
 
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	eval "$(${brew_path} shellenv)"
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	brew bundle --file "$(dirname "$0")/Brewfile"
+}
+
+selectShell() {
+
+	PS3='Choose your favorite shell: '
+	shells=("Bash" "ZSH" "Fish")
+	select shell in "${shells[@]}"; do
+		case $shell in
+		"Bash")
+			sudo chsh -s /bin/bash "$USER"
+			defaultShell="bash"
+			break
+			;;
+		"Fish")
+			sudo chsh -s "$fish_path" "$USER"
+			defaultShell="fish"
+			break
+			;;
+		"ZSH")
+			sudo chsh -s "$zsh_path" "$USER"
+			defaultShell="zsh"
+			break
+			;;
+		*)
+			selectShell
+			;;
+		esac
+	done
 }
 
 if [ "$OS" == "Darwin" ]; then
@@ -76,7 +104,11 @@ if ! grep -q "^${zsh_path}$" "/etc/shells"; then
 	echo "$zsh_path" | sudo tee -a /etc/shells
 fi
 
-sudo chsh -s "$zsh_path" "${USER}"
+fish_path=$(which fish)
+if ! grep -q "^${fish_path}$" "/etc/shells"; then
+	echo "$fish_path" | sudo tee -a /etc/shells
+fi
 
+selectShell
+$defaultShell
 echo "Done."
-exit 0
