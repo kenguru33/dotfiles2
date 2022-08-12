@@ -35,7 +35,7 @@ linuxInstall() {
 		exit 1
 	fi
 
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	brewBundleInstall
 	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 	brew bundle --file "$(dirname "$0")/Brewfile"
@@ -45,12 +45,17 @@ linuxInstall() {
 	fc-cache -fv
 }
 
-macOsInstall() {
+macOsBundeInstall() {
+
+	brewInstall
+	brew install kitty
+	brew install font-hack-nerd-font
+}
+
+brewBundleInstall() {
 
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	brew bundle --file "$(dirname "$0")/Brewfile"
-	brew install kitty
-	brew install font-hack-nerd-font
 }
 
 if [ "$OS" == "Darwin" ]; then
@@ -71,7 +76,7 @@ if ! grep -q "^${zsh_path}$" "/etc/shells"; then
 	echo "$zsh_path" | sudo tee -a /etc/shells
 fi
 
-sudo -S chsh -s "$zsh_path" "${USER}"
+sudo chsh --shell "$zsh_path" "${USER}"
 
 echo "Done."
 exit 0
