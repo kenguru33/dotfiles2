@@ -45,7 +45,7 @@ linuxInstall() {
 	fc-cache -fv
 }
 
-macOsBundeInstall() {
+macOsInstall() {
 
 	brewInstall
 	brew install kitty
