@@ -51,8 +51,8 @@ macOsInstall() {
 
 brewBundleInstall() {
 
-	eval "$(${brew_path} shellenv)"
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	eval "$(${brew_path} shellenv)"
 	brew bundle --file "$(dirname "$0")/Brewfile"
 }
 
