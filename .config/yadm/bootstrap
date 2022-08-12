@@ -84,6 +84,9 @@ selectShell() {
 	done
 }
 
+echo "stashing conflicting existing config files. To revert thus, run the command: yadm stash pop"
+yadm stash
+
 if [ "$OS" == "Darwin" ]; then
 	brew_path="/opt/homebrew/bin/brew"
 	macOsInstall
