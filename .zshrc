@@ -101,12 +101,10 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
-  fpath+=("$(brew --prefix)/share/zsh/site-functions")
   eval "$(/opt/hombrew/bin/brew shellenv)"
-  export LC_ALL=no_NO.UTF-8
-else 
+  fpath+=("$(brew --prefix)/share/zsh/site-functions")
+elif [[ "$(uname -s)" == "Linux" ]]; then 
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-  export LC_ALL=nb_NO.UTF-8
 fi
 
 source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
