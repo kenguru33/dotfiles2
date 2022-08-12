@@ -110,7 +110,7 @@ if ! grep -q "^${zsh_path}$" "/etc/shells"; then
 fi
 
 if [[ ! -d $HOME/.local/share/omf ]]; then
-	curl https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install | fish
+	curl https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install --noninteractive | fish
 fi
 
 fish_path=$(which fish)
