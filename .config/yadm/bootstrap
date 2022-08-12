@@ -76,7 +76,7 @@ if ! grep -q "^${zsh_path}$" "/etc/shells"; then
 	echo "$zsh_path" | sudo tee -a /etc/shells
 fi
 
-sudo chsh --shell "$zsh_path" "${USER}"
+sudo chsh -s "$zsh_path" "${USER}"
 
 echo "Done."
 exit 0
