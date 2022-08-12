@@ -35,8 +35,8 @@ linuxInstall() {
 		exit 1
 	fi
 
-	brewBundleInstall
 	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+	brewBundleInstall
 
 	brew bundle --file "$(dirname "$0")/Brewfile"
 
