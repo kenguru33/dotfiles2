@@ -102,6 +102,7 @@ fi
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
   fpath+=("$(brew --prefix)/share/zsh/site-functions")
+  eval "$(/opt/hombrew/bin/brew shellenv)"
   export LC_ALL=no_NO.UTF-8
 else 
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
