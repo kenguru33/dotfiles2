@@ -37,8 +37,6 @@ linuxInstall() {
 
 	brewBundleInstall
 
-	brew bundle --file "$(dirname "$0")/Brewfile"
-
 	wget -O /tmp/Hack.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
 	unzip -o /tmp/Hack.zip -d "$HOME/.local/share/fonts"
 	fc-cache -fv
@@ -54,7 +52,6 @@ macOsInstall() {
 brewBundleInstall() {
 
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
 	eval "$(${brew_path} shellenv)"
 	brew bundle --file "$(dirname "$0")/Brewfile"
 }
