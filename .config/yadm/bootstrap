@@ -47,7 +47,7 @@ linuxInstall() {
 
 macOsInstall() {
 
-	brewInstall
+	brewBundleInstall
 	brew install kitty
 	brew install font-hack-nerd-font
 }
