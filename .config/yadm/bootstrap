@@ -24,12 +24,19 @@ linuxInstall() {
 
 	if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ ${DISTRO_ID} ]]; then
 		sudo apt-get install build-essential procps curl file git -y
-		sudo apt-get install kitty -y
+		if [ -n "$XDG_CURRENT_DESKTOP" ]; then
+			sudo apt-get install kitty -y
+			installLinuxNerdFonts
+		fi
 	elif
 		[[ " ${SUPPORTED_REDHAT_ID[*]} " =~ ${DISTRO_ID} ]]
 	then
 		sudo dnf group install "C Development Tools and Libraries" "Development Tools" -y
 		sudo dnf install procps-ng curl file git redhat-lsb-core -y
+		if [ -n "$XDG_CURRENT_DESKTOP" ]; then
+			sudo dnf install kitty -y
+			installLinuxNerdFonts
+		fi
 	else
 		echo"Linux distro $DISTRO_ID not supported!"
 		exit 1
@@ -37,9 +44,6 @@ linuxInstall() {
 
 	brewBundleInstall
 
-	wget -O /tmp/Hack.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
-	unzip -o /tmp/Hack.zip -d "$HOME/.local/share/fonts"
-	fc-cache -fv
 }
 
 macOsInstall() {
@@ -54,6 +58,13 @@ brewBundleInstall() {
 	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	eval "$(${brew_path} shellenv)"
 	brew bundle --file "$(dirname "$0")/Brewfile"
+}
+
+installLinuxNerdFonts() {
+
+	wget -O /tmp/Hack.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
+	unzip -o /tmp/Hack.zip -d "$HOME/.local/share/fonts"
+	fc-cache -fv
 }
 
 selectShell() {
@@ -83,9 +94,6 @@ selectShell() {
 		esac
 	done
 }
-
-echo "stashing conflicting existing config files. To revert thus, run the command: yadm stash pop"
-yadm stash
 
 if [ "$OS" == "Darwin" ]; then
 	brew_path="/opt/homebrew/bin/brew"
@@ -119,6 +127,10 @@ if ! grep -q "^${fish_path}$" "/etc/shells"; then
 	echo "$fish_path" | sudo tee -a /etc/shells
 fi
 
+echo "stashing conflicting existing config files. To revert thus, run the command: yadm stash pop"
+yadm stash
+
 selectShell
 $defaultShell
+
 echo "Done."
