@@ -28,8 +28,8 @@ linuxInstall() {
 	elif
 		[[ " ${SUPPORTED_REDHAT_ID[*]} " =~ ${DISTRO_ID} ]]
 	then
-		sudo dnf installl groupinstall 'Development Tools'
-		sudo dnf install kitty
+		sudo dnf installl groupinstall 'Development Tools' -y
+		sudo dnf install procps-ng curl file git redhat-lsb-core -y
 	else
 		echo"Linux distro $DISTRO_ID not supported!"
 		exit 1
