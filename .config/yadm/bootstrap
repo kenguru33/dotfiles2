@@ -26,7 +26,6 @@ linuxInstall() {
 		sudo apt-get install build-essential procps curl file git -y
 		if [ -n "$XDG_CURRENT_DESKTOP" ]; then
 			sudo apt-get install kitty -y
-			installLinuxNerdFonts
 		fi
 	elif
 		[[ " ${SUPPORTED_REDHAT_ID[*]} " =~ ${DISTRO_ID} ]]
@@ -35,13 +34,13 @@ linuxInstall() {
 		sudo dnf install procps-ng curl file git redhat-lsb-core -y
 		if [ -n "$XDG_CURRENT_DESKTOP" ]; then
 			sudo dnf install kitty -y
-			installLinuxNerdFonts
 		fi
 	else
 		echo"Linux distro $DISTRO_ID not supported!"
 		exit 1
 	fi
 
+	installLinuxNerdFonts
 	brewBundleInstall
 
 }
