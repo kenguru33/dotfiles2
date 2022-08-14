@@ -126,8 +126,9 @@ if ! grep -q "^${fish_path}$" "/etc/shells"; then
 	echo "$fish_path" | sudo tee -a /etc/shells
 fi
 
-echo "stashing conflicting existing config files. To revert thus, run the command: yadm stash pop"
-yadm stash
+# echo "stashing conflicting existing config files. To revert thus, run the command: yadm stash pop"
+# yadm stash
+echo "Configure shell environment: "
 
 selectShell
 $defaultShell
