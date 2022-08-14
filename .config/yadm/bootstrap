@@ -94,6 +94,8 @@ selectShell() {
 	done
 }
 
+sudo echo
+
 if [ "$OS" == "Darwin" ]; then
 	brew_path="/opt/homebrew/bin/brew"
 	macOsInstall
