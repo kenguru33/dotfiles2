@@ -8,3 +8,6 @@ sudo dnf update -y
 
 # Install video codec
 sudo dnf install ffmpeg -y
+
+# Enable flatpak
+flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
