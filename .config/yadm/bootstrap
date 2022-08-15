@@ -25,6 +25,7 @@ linuxInstall() {
 	if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ ${DISTRO_ID} ]]; then
 		sudo apt-get install build-essential procps curl file git -y
 		if [ -n "$XDG_CURRENT_DESKTOP" ]; then
+			# Install Kitty terminal
 			sudo apt-get install kitty -y
 		fi
 	elif
@@ -33,7 +34,21 @@ linuxInstall() {
 		sudo dnf group install "C Development Tools and Libraries" "Development Tools" -y
 		sudo dnf install procps-ng curl file git redhat-lsb-core -y
 		if [ -n "$XDG_CURRENT_DESKTOP" ]; then
+			# Install Kitty terminal
 			sudo dnf install kitty -y
+
+			# Enable rpm fusion
+			sudo dnf install "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" -y
+			sudo dnf install "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" -y
+
+			# Update
+			sudo dnf update -y
+
+			# Install video codec
+			sudo dnf install ffmpeg -y
+
+			# Enable flatpak
+			flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
 		fi
 	else
 		echo"Linux distro $DISTRO_ID not supported!"
