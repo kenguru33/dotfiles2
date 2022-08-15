@@ -53,17 +53,21 @@ macOsInstall() {
 }
 
 brewBundleInstall() {
-
-	NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	eval "$(${brew_path} shellenv)"
+	if ! command -v brew >/dev/null 2>&1; then
+		echo "Installing brew..."
+		NONINTERACTIVE=1 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+		eval "$(${brew_path} shellenv)"
+	fi
 	brew bundle --file "$(dirname "$0")/Brewfile"
 }
 
 installLinuxNerdFonts() {
 
-	wget -O /tmp/Hack.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
-	unzip -o /tmp/Hack.zip -d "$HOME/.local/share/fonts"
-	fc-cache -fv
+	if [[ ! -f "$HOME/.local/share/fonts/Hack Regular Nerd Font Complete Mono.ttf" ]]; then
+		wget -O /tmp/Hack.zip https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
+		unzip -o /tmp/Hack.zip -d "$HOME/.local/share/fonts"
+		fc-cache -fv
+	fi
 }
 
 selectShell() {
@@ -107,6 +111,7 @@ else
 	exit 1
 fi
 
+echo "Installing volta nodejs manager..."
 volta install node@lts
 
 if [[ ! -d $HOME/.oh-my-zsh ]]; then
@@ -130,7 +135,7 @@ fi
 
 # echo "stashing conflicting existing config files. To revert thus, run the command: yadm stash pop"
 # yadm stash
-echo "Configure shell environment: "
+echo "Current shell: ${SHELL} "
 
 selectShell
 $defaultShell
