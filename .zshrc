@@ -103,12 +103,19 @@ fi
 if [[ "$(uname -s)" == "Darwin" ]]; then
   eval "$(/opt/hombrew/bin/brew shellenv)"
   fpath+=("$(brew --prefix)/share/zsh/site-functions")
+  source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+  source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 elif [[ "$(uname -s)" == "Linux" ]]; then 
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  source $HOME/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  source $HOME/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+
+
+  fpath+=("$HOME/.nix-profile/share/zsh/site-functions")
+  if [ -e /home/bernt/.nix-profile/etc/profile.d/nix.sh ]; then 
+    . /home/bernt/.nix-profile/etc/profile.d/nix.sh; 
+  fi 
 fi
 
-source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 
 # Pure Promt
 autoload -U promptinit; promptinit
@@ -117,4 +124,5 @@ prompt pure
 # Volta
 export VOLTA_HOME="$HOME/.volta"
 export PATH="$VOLTA_HOME/bin:$PATH"
+
 

@@ -31,5 +31,8 @@ export PATH="$VOLTA_HOME/bin:$PATH"
 if [[ "$(uname -s)" == "Darwin" ]]; then
 	eval "$(/opt/hombrew/bin/brew shellenv)"
 elif [[ "$(uname -s)" == "Linux" ]]; then
-	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  if [ -e /home/bernt/.nix-profile/etc/profile.d/nix.sh ]; then 
+    . /home/bernt/.nix-profile/etc/profile.d/nix.sh 
+  fi
 fi
+
