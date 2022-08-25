@@ -1,0 +1,21 @@
+with import <nixpkgs>{}; [ 
+  unzip
+  azure-cli
+  curl
+  gcc
+  git
+  go
+  k9s
+  kubectl
+  kubectx
+  lazygit
+  zsh
+  pure-prompt
+  ripgrep
+  fish
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+  tmux
+  cargo
+  neovim
+]
