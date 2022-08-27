@@ -23,6 +23,8 @@ SUPPORTED_REDHAT_ID=("Fedora")
 linuxInstall() {
 
 	if [[ " ${SUPPORTED_DEBIAN_ID[*]} " =~ ${DISTRO_ID} ]]; then
+		sudo apt update -y
+		sudo apt upgrade -y
 		sudo apt-get install build-essential procps curl file git -y
 		if [ -n "$XDG_CURRENT_DESKTOP" ]; then
 			# Install Kitty terminal
