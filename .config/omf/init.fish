@@ -4,3 +4,6 @@ if test $OS = "Linux"
 else if $OS = "Darwin" 
   eval "$(/opt/hombrew/bin/brew shellenv)"
 end
+
+set -gx VOLTA_HOME "$HOME/.volta"
+set -gx PATH "$VOLTA_HOME/bin" $PATH
