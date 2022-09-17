@@ -101,7 +101,7 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 if [[ "$(uname -s)" == "Darwin" ]]; then
-  eval "$(/opt/hombrew/bin/brew shellenv)"
+  eval $(/opt/homebrew/bin/brew shellenv)
   fpath+=("$(brew --prefix)/share/zsh/site-functions")
   source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
   source $HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh
