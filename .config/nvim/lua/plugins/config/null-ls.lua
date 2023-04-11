@@ -4,7 +4,6 @@ local diagnostics = null_ls.builtins.diagnostics
 local codeAction = null_ls.builtins.code_actions
 null_ls.setup({
 	sources = {
-		formatting.stylua,
 		formatting.prettier,
 		diagnostics.eslint,
 		codeAction.eslint,

@@ -12,7 +12,7 @@ require("mason-lspconfig").setup({
 	automatic_installation = true,
 })
 require("mason-tool-installer").setup({
-	ensure_installed = { "bash-language-server", "shellcheck", "shfmt", "lua-language-server", "stylua", "prettier" },
+	ensure_installed = { "bash-language-server", "shellcheck", "shfmt", "prettier" },
 	auto_update = false,
 	run_on_start = true,
 	start_delay = 3000,
@@ -70,7 +70,7 @@ local on_attach = function(client, bufnr)
 		client.resolved_capabilities.document_range_formatting = false
 	end
 
-	if client.name == "sumneko_lua" then
+	if client.name == "lua_ls" then
 		client.resolved_capabilities.document_formatting = false
 		client.resolved_capabilities.document_range_formatting = false
 	end
@@ -81,7 +81,7 @@ local on_attach = function(client, bufnr)
 	end
 end
 
-lspconfig.sumneko_lua.setup({
+lspconfig.lua_ls.setup({
 	on_attach = on_attach,
 	settings = {
 		Lua = {
